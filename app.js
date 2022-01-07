@@ -46,6 +46,8 @@ const createArrayOfDigitElements = () => {
     digitElement.id = `btn${digit}`;
     digitElement.innerText = digit;
     digitElement.classList.add("digit");
+    digitElement.setAttribute("data-value", digit);
+    digitElement.addEventListener('click', (e) => handleDigitPress(e));
 
     arrayOfDigitElements.push(digitElement);
   });
@@ -72,11 +74,25 @@ const createArrayOfOperatorElements = () => {
     operatorElement.classList.add("operator");
     operatorElement.setAttribute('data-operator', operator);
     operatorElement.innerText = getOperatorText(operator);
+    operatorElement.addEventListener('click', (e) => handleOperatorPress(e));
 
     arrayOfOperatorElements.push(operatorElement);
   });
 
   return arrayOfOperatorElements;
+};
+
+const handleOperatorPress = (e) => {
+  e.stopPropagation();
+
+  let operator = getOperatorAttribute(e.target);
+
+  updateState(state, "operator", operator);
+  appendToDisplayElement(state);
+};
+
+const getOperatorAttribute = (element) => {
+  return element.dataset.operator;
 };
 
 const getOperatorText = (operator) => {
@@ -110,7 +126,7 @@ const createEqualContainer = () => {
   equalContainer.appendChild(equalElement);
 
   return equalContainer;
-}
+};
 
 const createEqualElement = () => {
   const equalElement = document.createElement("button");
@@ -118,9 +134,61 @@ const createEqualElement = () => {
   equalElement.id = "equal";
   equalElement.classList.add("equal");
   equalElement.innerText = "=";
+  equalElement.addEventListener('click', (e) => handleEqualPress(e));
 
   return equalElement;
-}
+};
+
+const handleEqualPress = (e) => {
+  e.stopPropagation();
+
+  let result = calcResult(state);
+
+  updateState(state, "equal", result);
+
+  appendToDisplayElement(state); 
+};
+
+const calcResult = (state) => {
+  let operator = getOperatorFunction(state.operator);
+  let a = parseInt(state.a);
+  let b = parseInt(state.b);
+
+  let isValid = validateData(operator, a, b);
+
+  return isValid ? operate(operator, a, b) : "";
+};
+
+const validateData = (operator, a, b) => {
+  let isValid = false;
+  
+  if (operator && !isNaN(a) && !isNaN(b)) isValid = true;
+
+  return isValid;
+};
+
+const getOperatorFunction = (operatorKey) => {
+  let operatorFunction;
+
+  switch (operatorKey) {
+    case "add":
+      operatorFunction = add;
+      break;
+    case "subtract":
+      operatorFunction = subtract;
+      break;
+    case "multiply":
+      operatorFunction = multiply;
+      break;
+    case "divide":
+      operatorFunction = divide;
+      break;
+    default:
+      operatorFunction = undefined;
+  }
+
+  return operatorFunction;
+};
 
 const createClearContainer = () => {
   const clearContainer = document.createElement("div");
@@ -130,7 +198,7 @@ const createClearContainer = () => {
   clearContainer.appendChild(clearElement);
 
   return clearContainer;
-}
+};
 
 const createClearElement = () => {
   const clearElement = document.createElement("button");
@@ -157,10 +225,56 @@ const createDisplayElement = () => {
 
   displayElement.id = "display";
   displayElement.classList.add("display");
-  displayElement.textContent = "1234";
+  displayElement.textContent = "";
 
   return displayElement;
 }
+
+const handleDigitPress = (e) => {
+  e.stopPropagation();
+  
+  const value = getValueAttribute(e.target);
+  displayElementBrain(state, value);
+};
+
+const updateState = (state, key, value) => {
+  if (key === "operator") {
+    state[key] = value;
+    if (state.a !== "") {
+      state.variableIndex = 'b';
+    }
+    return;
+  }
+  else if (key === "equal") {
+    state.a = value;
+    state.b = '';
+    state.operator = '';
+    state.variableIndex = 'a';
+  }
+  else {
+    state[key] += value;
+  }
+}
+
+const getValueAttribute = (element) => {
+  return element.dataset.value;
+}
+
+const displayElementBrain = (state, value) => {
+  let variableIndex = state.variableIndex;
+
+  updateState(state, variableIndex, value);
+
+
+  appendToDisplayElement(state);
+};
+
+const appendToDisplayElement = (state) => {
+  const displayElement = document.getElementById("display");
+  const variableIndex = state.variableIndex;
+
+  displayElement.textContent = `${state[variableIndex]}`;
+};
 
 const appendContainer = (containerElement, arrElements) => {
   arrElements.forEach((element) => {
@@ -175,6 +289,13 @@ const main = () => {
   const calculatorContainer = createCalculatorElements();
 
   app.appendChild(calculatorContainer);
+};
+
+let state = {
+  a: "",
+  b: "",
+  variableIndex: "a",
+  operator: ""
 };
 
 main();
