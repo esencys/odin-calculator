@@ -11,7 +11,7 @@ const operate = (operator, a, b) => operator(a, b);
 const createCalculatorElements = () => {
   const calculatorContainer = document.createElement("div");
   calculatorContainer.id = "calculator";
-  calculatorContainer.classList.add("grid");
+  calculatorContainer.classList.add("grid", "calculator");
 
   const digits = createDigitContainer();
   const operators = createOperatorContainer();
@@ -30,6 +30,7 @@ const createCalculatorElements = () => {
 
 const createDigitContainer = () => {
   const digitContainer = document.createElement("div");
+  digitContainer.classList.add("grid-digits");
   const arrDigits = createArrayOfDigitElements();
 
   return appendContainer(digitContainer, arrDigits);
@@ -42,9 +43,9 @@ const createArrayOfDigitElements = () => {
   DIGITS.forEach((digit) => {
     const digitElement = document.createElement("button");
 
-    digitElement.id = digit;
+    digitElement.id = `btn${digit}`;
     digitElement.innerText = digit;
-    digitElement.classList.add("digit", "grid-digits");
+    digitElement.classList.add("digit");
 
     arrayOfDigitElements.push(digitElement);
   });
@@ -54,6 +55,7 @@ const createArrayOfDigitElements = () => {
 
 const createOperatorContainer = () => {
   const operatorContainer = document.createElement("div");
+  operatorContainer.classList.add("grid-operators");
   const arrOperators = createArrayOfOperatorElements();
 
   return appendContainer(operatorContainer, arrOperators);
@@ -67,7 +69,7 @@ const createArrayOfOperatorElements = () => {
     const operatorElement = document.createElement("button");
 
     operatorElement.id = operator;
-    operatorElement.classList.add("operator", "grid-operators");
+    operatorElement.classList.add("operator");
     operatorElement.setAttribute('data-operator', operator);
     operatorElement.innerText = getOperatorText(operator);
 
@@ -102,6 +104,7 @@ const getOperatorText = (operator) => {
 
 const createEqualContainer = () => {
   const equalContainer = document.createElement("div");
+  equalContainer.classList.add("grid-equal");
   const equalElement = createEqualElement();
 
   equalContainer.appendChild(equalElement);
@@ -113,27 +116,47 @@ const createEqualElement = () => {
   const equalElement = document.createElement("button");
 
   equalElement.id = "equal";
-  equalElement.classList.add("equal", "grid-equal");
+  equalElement.classList.add("equal");
   equalElement.innerText = "=";
 
   return equalElement;
 }
 
 const createClearContainer = () => {
+  const clearContainer = document.createElement("div");
+  clearContainer.classList.add("grid-clear");
+  const clearElement = createClearElement();
+
+  clearContainer.appendChild(clearElement);
+
+  return clearContainer;
+}
+
+const createClearElement = () => {
   const clearElement = document.createElement("button");
 
   clearElement.id = "clear";
-  clearElement.classList.add("clear", "grid-clear");
+  clearElement.classList.add("clear");
   clearElement.innerText = "c";
 
   return clearElement;
-}
+};
 
 const createDisplayContainer = () => {
+  const displayContainer = document.createElement("div");
+  displayContainer.classList.add("grid-display");
+  const displayElement = createDisplayElement();
+
+  displayContainer.appendChild(displayElement);
+
+  return displayContainer;
+}
+
+const createDisplayElement = () => {
   const displayElement = document.createElement("div");
 
   displayElement.id = "display";
-  displayElement.classList.add("display", "grid-display");
+  displayElement.classList.add("display");
   displayElement.textContent = "1234";
 
   return displayElement;
