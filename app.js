@@ -36,10 +36,10 @@ const createArrayOfDigitElements = () => {
   let arrayOfDigitElements = [];
 
   DIGITS.forEach((digit) => {
-    const digitElement = document.createElement("div");
+    const digitElement = document.createElement("button");
 
     digitElement.id = digit;
-    digitElement.textContent = digit;
+    digitElement.innerText = digit;
     digitElement.classList.add("digit");
 
     arrayOfDigitElements.push(digitElement);
@@ -60,12 +60,12 @@ const createArrayOfOperatorElements = () => {
   let arrayOfOperatorElements = [];
 
   OPERATORS.forEach((operator) => {
-    const operatorElement = document.createElement("div");
+    const operatorElement = document.createElement("button");
 
     operatorElement.id = operator;
     operatorElement.classList.add("operator");
     operatorElement.setAttribute('data-operator', operator);
-    operatorElement.textContent = getOperatorTextContent(operator);
+    operatorElement.innerText = getOperatorText(operator);
 
     arrayOfOperatorElements.push(operatorElement);
   });
@@ -73,7 +73,7 @@ const createArrayOfOperatorElements = () => {
   return arrayOfOperatorElements;
 };
 
-const getOperatorTextContent = (operator) => {
+const getOperatorText = (operator) => {
   let textContent = "";
 
   switch (operator) {
@@ -106,21 +106,21 @@ const createEqualContainer = () => {
 }
 
 const createEqualElement = () => {
-  const equalElement = document.createElement("div");
+  const equalElement = document.createElement("button");
 
   equalElement.id = "equal";
   equalElement.classList.add("equal");
-  equalElement.textContent = "=";
+  equalElement.innerText = "=";
 
   return equalElement;
 }
 
 const createClearContainer = () => {
-  const clearElement = document.createElement("div");
+  const clearElement = document.createElement("button");
 
   clearElement.id = "clear";
   clearElement.classList.add("clear");
-  clearElement.textContent = "c";
+  clearElement.innerText = "c";
 
   return clearElement;
 }
