@@ -18,8 +18,8 @@ const createCalculatorElements = () => {
   const display = createDisplayContainer();
 
   app.appendChild(display);
-  app.appendChild(operators);
   app.appendChild(clear);
+  app.appendChild(operators);
   app.appendChild(digits);
   app.appendChild(equal);
 };
