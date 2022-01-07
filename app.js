@@ -17,11 +17,11 @@ const createCalculatorElements = () => {
   const clear = createClearContainer();
   const display = createDisplayContainer();
 
-  app.appendChild(digits);
-  app.appendChild(operators);
-  app.appendChild(equal);
-  app.appendChild(clear);
   app.appendChild(display);
+  app.appendChild(operators);
+  app.appendChild(clear);
+  app.appendChild(digits);
+  app.appendChild(equal);
 };
 
 const createDigitContainer = () => {
