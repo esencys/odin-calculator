@@ -9,7 +9,9 @@ const divide = (a, b) => a / b;
 const operate = (operator, a, b) => operator(a, b);
 
 const createCalculatorElements = () => {
-  const app = document.getElementById("app");
+  const calculatorContainer = document.createElement("div");
+  calculatorContainer.id = "calculator";
+  calculatorContainer.classList.add("grid");
 
   const digits = createDigitContainer();
   const operators = createOperatorContainer();
@@ -17,11 +19,13 @@ const createCalculatorElements = () => {
   const clear = createClearContainer();
   const display = createDisplayContainer();
 
-  app.appendChild(display);
-  app.appendChild(clear);
-  app.appendChild(operators);
-  app.appendChild(digits);
-  app.appendChild(equal);
+  calculatorContainer.appendChild(display);
+  calculatorContainer.appendChild(clear);
+  calculatorContainer.appendChild(operators);
+  calculatorContainer.appendChild(digits);
+  calculatorContainer.appendChild(equal);
+
+  return calculatorContainer;
 };
 
 const createDigitContainer = () => {
@@ -144,7 +148,10 @@ const appendContainer = (containerElement, arrElements) => {
 };
 
 const main = () => {
-  createCalculatorElements();
+  const app = document.getElementById("app");
+  const calculatorContainer = createCalculatorElements();
+
+  app.appendChild(calculatorContainer);
 };
 
 main();
