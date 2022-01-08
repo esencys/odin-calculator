@@ -18,12 +18,18 @@ body {
   max-height: 50vh;
   margin: 0 auto;
   border: 1px solid black;
+  border-style: solid;
+  background-color: hsla(45, 29%, 87%, 0.9);
 }
 
 .display {
-  border: 1px solid black;
+  background-color: hsla(0, 0%, 50%, 0.9);
+  border-bottom: 1px solid black;
+  border-style: none;
   text-align: right;
   font-size: 32px;
+  padding: 0 1px;
+  color: hsl(45, 29%, 80%);
 }
 
 .grid {
@@ -36,6 +42,8 @@ body {
   grid-column: 1 / 5;
   grid-row: 1 / 3;
   display: grid;
+  margin: 2px 2px 0 2px;
+  border-style: none;
 }
 
 .grid-clear {
@@ -48,6 +56,8 @@ body {
   grid-column: 4;
   grid-row: 3 / 7;
   display: grid;
+  margin: 2px 2px 2px 0px;
+  row-gap: 2px;
 }
 
 .grid-digits {
@@ -56,12 +66,47 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(4, 1fr);
+  row-gap: 2px;
+  column-gap: 2px;
+  margin: 2px;
 }
 
 .grid-equal {
   grid-column: 4;
   grid-row: 7;
   display: grid;
+}
+
+.operator {
+  background-color: hsla(40, 100%, 50%, 0.6);
+  border-style: solid;
+}
+
+.result {
+  border: 1px solid black;
+  border-style: none;
+  text-align: right;
+  font-size: 32px;
+  background-color: hsla(0, 0%, 50%, 0.9);
+  padding: 0 1px;
+  color: hsl(45, 29%, 80%);
+}
+
+.digit {
+  background-color: hsla(0, 0%, 70%, 0.6);
+  border-style: solid;
+}
+
+.clear {
+  margin: 2px 0px 0px 2px;
+  background-color: hsla(40, 100%, 50%, 0.6);
+  border-style: solid;
+}
+
+.equal {
+  margin: 0px 2px 2px 0px;
+  background-color: hsla(40, 100%, 50%, 0.6);
+  border-style: solid;
 }
 
 #btn0 {
