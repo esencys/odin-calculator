@@ -8,6 +8,8 @@ const divide = (a, b) => a / b;
 
 const operate = (operator, a, b) => operator(a, b);
 
+const round = (num, digit=10) => Math.round((num + Number.EPSILON) * 10 ** digit) / 10 ** digit;
+
 const createCalculatorElements = () => {
   const calculatorContainer = document.createElement("div");
   calculatorContainer.id = "calculator";
@@ -88,7 +90,6 @@ const handleOperatorPress = (e) => {
   let operator = getOperatorAttribute(e.target);
 
   updateState(state, "operator", operator);
-  appendToDisplayElement(state);
 };
 
 const getOperatorAttribute = (element) => {
@@ -143,20 +144,29 @@ const handleEqualPress = (e) => {
   e.stopPropagation();
 
   let result = calcResult(state);
+  if (isFloat(result)) {
+    result = round(result);
+  }
 
   updateState(state, "equal", result);
 
-  appendToDisplayElement(state); 
+  appendToResultElement(state); 
 };
 
 const calcResult = (state) => {
   let operator = getOperatorFunction(state.operator);
-  let a = parseInt(state.a);
-  let b = parseInt(state.b);
 
+  let a = parseFloat(state.a);
+  let b = parseFloat(state.b);
+  a = isFloat(a) ? round(a) : a;
+  b = isFloat(b) ? round(b) : b;
   let isValid = validateData(operator, a, b);
 
   return isValid ? operate(operator, a, b) : "";
+};
+
+const isFloat = (num) => {
+  return num % parseInt(num) != 0;
 };
 
 const validateData = (operator, a, b) => {
@@ -206,6 +216,7 @@ const createClearElement = () => {
   clearElement.id = "clear";
   clearElement.classList.add("clear");
   clearElement.innerText = "c";
+  clearElement.addEventListener('click', handleClearPress);
 
   return clearElement;
 };
@@ -214,8 +225,10 @@ const createDisplayContainer = () => {
   const displayContainer = document.createElement("div");
   displayContainer.classList.add("grid-display");
   const displayElement = createDisplayElement();
+  const resultElement = createResultElement();
 
   displayContainer.appendChild(displayElement);
+  displayContainer.appendChild(resultElement);
 
   return displayContainer;
 }
@@ -230,6 +243,16 @@ const createDisplayElement = () => {
   return displayElement;
 }
 
+const createResultElement = () => {
+  const resultElement = document.createElement("div");
+
+  resultElement.id = "result";
+  resultElement.classList.add("result");
+  resultElement.textContent = "";
+
+  return resultElement;
+}
+
 const handleDigitPress = (e) => {
   e.stopPropagation();
   
@@ -237,16 +260,47 @@ const handleDigitPress = (e) => {
   displayElementBrain(state, value);
 };
 
+const handleClearPress = (e) => {
+  e.stopPropagation();
+
+  clearState(state);
+  appendToResultElement(state);
+  appendToDisplayElement(state);
+};
+
+const clearState = (state) => {
+  state.a = "";
+  state.b = "";
+  state.result = "";
+  state.variableIndex = "a";
+  state.operator = "";
+};
+
 const updateState = (state, key, value) => {
   if (key === "operator") {
-    state[key] = value;
     if (state.a !== "") {
       state.variableIndex = 'b';
     }
+    if (state.b !== "") {
+      result = calcResult(state);
+      if (isFloat(result)) {
+        result = round(result);
+      }
+      state.result = `${result}`.slice(0,16);
+      state[key] = value;
+      state.a = result; 
+      state.b = '';
+      state.variableIndex = 'b';
+      appendToResultElement(state);
+      return;
+    }
+    state[key] = value;
     return;
   }
   else if (key === "equal") {
     state.a = value;
+    state.result = value;
+
     state.b = '';
     state.operator = '';
     state.variableIndex = 'a';
@@ -265,7 +319,6 @@ const displayElementBrain = (state, value) => {
 
   updateState(state, variableIndex, value);
 
-
   appendToDisplayElement(state);
 };
 
@@ -275,6 +328,17 @@ const appendToDisplayElement = (state) => {
 
   displayElement.textContent = `${state[variableIndex]}`;
 };
+
+const appendToResultElement = (state) => {
+  const resultElement = document.getElementById("result");
+  let result = state.result;
+
+  if (result == Infinity) {
+    result = "uh oh infinite";
+  };
+
+  resultElement.textContent = `${result}`;
+}
 
 const appendContainer = (containerElement, arrElements) => {
   arrElements.forEach((element) => {
@@ -295,7 +359,8 @@ let state = {
   a: "",
   b: "",
   variableIndex: "a",
-  operator: ""
+  operator: "",
+  result: ""
 };
 
 main();
