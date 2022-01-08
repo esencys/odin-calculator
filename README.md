@@ -10,3 +10,10 @@ Learnt:
 - POJO
 - rounding floats
 - css grid layout management with multiple containers
+
+Roadmap:
+
+[] Add "." button
+[] Add backspace button
+[] Add keyboard support
+[] Change display to show history eg"2+2+2+2" instead of just state.a or state.b
